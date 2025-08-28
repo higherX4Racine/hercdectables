@@ -1,0 +1,29 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# hercdectables
+
+<!-- badges: start -->
+
+<!-- badges: end -->
+
+hercdectables is a data package that contains glossaries for US Census
+groups.
+
+A glossary is a mapping from variable names to a collection of explicit
+values that the variables encode. For example, a variable in the Census
+database might report a count of the number of people from one
+demographic group living in one type of housing and primarily speaking
+one language. The glossary for that group would include columns of
+demographic group, housing type, and primary language. These glossaries
+explain the Census API’s Decennial group tables.
+
+## Installation
+
+You can install the development version of hercdectables from
+[GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("higherX4Racine/hercdectables")
+```
