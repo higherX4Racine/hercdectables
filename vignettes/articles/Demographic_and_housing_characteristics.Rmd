@@ -1,0 +1,260 @@
+---
+title: "Demographic and housing characteristics"
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    warning = FALSE,
+    message = FALSE,
+    comment = "#>",
+    cache = TRUE,
+    dpi = 96,
+    fig.dim = c(width = 7, height = 4),
+    dev = "png"
+)
+
+library(hercdectables)
+```
+
+## Why the DHC?
+
+The 2020 Demographic and Housing Characteristics file
+[(DHC)](http://api.census.gov/data/2020/dec/dhc.html) is a table with detailed,
+block-level information about socioeconomic conditions.
+
+The Census API has [other tables](https://api.census.gov/data/2020/dec.html)
+from the Decennial Census, but they lack the level of detail in the DHC.
+Some tables lack spatial resolution.
+For example, tables like the
+[Demographic Profile (DP)](http://api.census.gov/data/2020/dec/dp.html)
+or the
+[Congressional District (cd11X)](http://api.census.gov/data/2020/dec/cd119.html)
+do not provide data at the block level.
+Other tables lack demographic resolution.
+For example the table of
+[Redistricting Data (PL)](http://api.census.gov/data/2020/dec/pl.html)
+contains many fewer cross-tabulations between race and housing situation.
+The DHC provides fine-grained detail, as can be seen in its definition from the
+link above:
+
+> This product will include topics such as age, sex, race, Hispanic or Latino
+> origin, household type, family type, relationship to householder, group
+> quarters population, housing occupancy and housing tenure.
+> Some tables will be iterated by race and ethnicity.
+
+That ambitious portfolio means that the DHC is huge and complex, with
+`r length(unique(DHC_VARIABLES$Group))`
+[groups](http://api.census.gov/data/2020/dec/dhc/groups.html), or sub-tables,
+that hold a total of `r nrow(DHC_VARIABLES)` separate
+[variables](http://api.census.gov/data/2020/dec/dhc/variables.html).
+I used the Census API to create a data table in R that captures the information
+from the link just above.
+These variables provide a compact way for the API to present information, but
+they need some assistance to be meaningful to actual humans.
+That is where glossary tables come in.
+
+## Glossary tables for DHC groups
+
+A glossary table explicitly lays out the connection between the row number of a
+Census API variable and the demographic meaning that it represents.
+For example, the single variable "H12B_010N", might reports the number of
+rented households that are headed by a Black, non-Hispanic, householder.
+That captures information about race, ethnicity, home ownership, and number of
+households.
+A glossary that explains group H12B would therefore need at least 4 columns.
+
+This report documents the process that I will follow to create a glossary table
+for each group in the DHC.
+
+## Characteristics of each group
+
+The glossary for each group will need enough columns to represent all of the
+detail that is captured by its rows.
+The first step for glossing a group is to count how many columns appear in its
+variables' lists of details.
+
+```{r}
+#| label: find-columns-per-group
+
+DHC_VARIABLES |>
+    dplyr::summarize(
+        `Columns Present` = .data$Details |>
+            purrr::map_int(length) |>
+            max(),
+        .by = "Group"
+    ) |>
+    dplyr::count(
+        .data$`Columns Present`,
+        name = "Frequency"
+    ) |>
+    knitr::kable(
+        caption = "How many detail columns are needed by DHC groups."
+    )
+```
+
+Most of the groups will need three or fewer columns to capture their details,
+but many will need more.
+Three different tables will need six columns!
+We'll use those as examples as we proceed.
+
+```{r}
+#| label: hoist-group-details
+
+GROUP_DETAILS <- DHC_VARIABLES |>
+    dplyr::summarize(
+        Concept = dplyr::first(.data$Concept),
+        Length = dplyr::n(),
+        Width = .data$Details |>
+            purrr::map_int(length) |>
+            max(),
+        .by = "Group"
+    ) |>
+    dplyr::mutate(
+        Variables = purrr::map2(
+            .data$Group, .data$Width,
+            \(.g, .c) {
+                .tmp <- DHC_VARIABLES |>
+                    hercacstables::hoist_table_glossary(
+                        .g,
+                        LETTERS[1:.c]
+                    )
+                if (nrow(.tmp) > 1) {
+                    .tmp <- hiRx::only_informative_columns(.tmp)
+                }
+                dplyr::mutate(
+                    .tmp,
+                    dplyr::across(tidyselect::any_of(LETTERS[1:.c]),
+                                  \(.) dplyr::coalesce(., ""))
+                )
+            }
+        )
+    )
+```
+
+```{r}
+#| label: identify-example-groups
+#| dependson: hoist-group-details
+
+EXAMPLE_GROUPS <- GROUP_DETAILS |>
+    dplyr::filter(
+        .data$Width == 6
+    ) |>
+    dplyr::select(
+        !tidyselect::any_of(c("Variables", "Width"))
+    )
+
+knitr::kable(
+    EXAMPLE_GROUPS,
+    caption = "DHC groups that need six columns to capture their details"
+)
+```
+
+## An example glossary: PCT2
+
+This is what the details of table PT2 look like after hoisting.
+
+```{r}
+#| label: view-raw-pct2
+#| dependson: hoist-group-details
+
+PCT2 <- GROUP_DETAILS |>
+    dplyr::filter(
+        .data$Group == "PCT2"
+    ) |>
+    dplyr::pull(
+        "Variables"
+    ) |>
+    purrr::pluck(1)
+
+knitr::kable(
+    PCT2,
+    caption = "The details of group PCT2"
+)
+```
+
+One of the devilish things about Census data is that the meaning of the value
+in a particular row and column depends upon the structure of a table.
+Consequently, we cannot look at each value by itself.
+We have to try to make meaning of the entire table at once.
+
+```{r}
+#| label: show-table-pct2
+#| echo: FALSE
+
+knitr::kable(DHC_PCT2,
+             caption = "Glossed details from group PCT2")
+```
+
+Note that I use `NA` to represent the "any possible value" state for a factor.
+I'm not sure that this is a good choice.
+It might be better to use an explicit value like "", "All", or "*".
+It does make things consistent across factors and Boolean fields, though.
+
+### Levels of summary
+
+The worst thing about Census data files is that they include both stand-alone
+observations and subtotals.
+That is what the `Level` field is intended to capture.
+I am very open to suggestions for better terminology.
+
+Using the `Level` field, we can pull stand-alone rows.
+Notice that none of these variables have `NA` in any of their values.
+That was originally my way of detecting stand-alone rows, but I can imagine a
+situation where some factor is simply irrelevant, rather than aggregated,
+so I think it is better to explicitly note each row's level of aggregation.
+
+```{r}
+#| label: pct2-stand-alone-rows
+#| echo: false
+
+DHC_VARIABLES |>
+    dplyr::filter(
+        .data$Group == "PCT2"
+    ) |>
+    dplyr::select(
+        "Variable",
+        "Index"
+    ) |>
+    dplyr::inner_join(
+        DHC_PCT2 |>
+            dplyr::filter(
+                .data$Level == 0
+            ),
+        by = "Index"
+    ) |>
+    knitr::kable(
+        caption = "Variables of PCT2 that are not subtotals or totals."
+    )
+```
+
+We can also pull rows that are aggregations of other rows' values.
+Note that each of these rows will definitely have some `NA` values.
+The number of `NA`s in a row is proportional, but not exactly equal, to its
+level of aggregation.
+
+```{r}
+#| label: pct2-aggregate-rows
+#| echo: false
+
+DHC_VARIABLES |>
+    dplyr::filter(
+        .data$Group == "PCT2"
+    ) |>
+    dplyr::select(
+        "Index",
+        "Variable"
+    ) |>
+    dplyr::inner_join(
+        DHC_PCT2 |>
+            dplyr::filter(
+                .data$Level > 0
+            ),
+        by = "Index"
+    ) |>
+    knitr::kable(
+        caption = "Variables of PCT2 that are subtotals or totals."
+    )
+```

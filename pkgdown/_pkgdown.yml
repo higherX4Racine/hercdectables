@@ -1,0 +1,35 @@
+url: https://higherx4racine.github.io/hercdectables/
+template:
+  light-switch: true
+  bootstrap: 5
+
+repo:
+  url:
+    home: https://github.com/higherX4Racine/herdectables
+
+destination: pkgdown/docs/
+
+articles:
+
+- title: Data products from the Decennial Census
+  navbar: ~
+  contents:
+  - articles/Demographic_and_housing_characteristics
+
+reference:
+
+- title: Glossaries
+  desc: >
+    Mappings between variable rows and the context information they encode.
+
+- subtitle: Demographic and Housing Characteristics
+  desc: >
+    Groups from the Demographic and Housing Characteristics product
+  contents:
+  - DHC_PCT2
+
+- title: Variables
+  desc: >
+    Tables of variables by group, with details as lists.
+  contents:
+  - DHC_VARIABLES

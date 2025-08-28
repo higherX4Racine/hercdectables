@@ -19,3 +19,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 URL: https://higherx4racine.github.io/hercdectables/
+Depends: 
+    R (>= 3.5)
+LazyData: true
+Config/Needs/website: rmarkdown

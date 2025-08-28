@@ -1,0 +1,16 @@
+---
+title: "hercdectables"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Nothing yet but we'll include some useful getting started stuff eventually.
+
+```{r setup}
+library(hercdectables)
+```

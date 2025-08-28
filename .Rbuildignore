@@ -6,3 +6,5 @@
 ^pkgdown$
 ^LICENSE\.md$
 ^\.github$
+^data-raw$
+^vignettes/articles$
