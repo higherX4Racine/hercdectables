@@ -5,6 +5,12 @@ title: "Demographic and housing characteristics"
 ```{r}
 #| label: setup
 #| include: false
+
+requireNamespace("dplyr", quietly = TRUE)
+requireNamespace("knitr", quietly = TRUE)
+requireNamespace("purrr", quietly = TRUE)
+requireNamespace("tidyselect", quietly = TRUE)
+
 knitr::opts_chunk$set(
     collapse = TRUE,
     warning = FALSE,
@@ -103,6 +109,15 @@ We'll use those as examples as we proceed.
 ```{r}
 #| label: hoist-group-details
 
+hoist_group_details <- function(.glossary, .group, .fields){
+    .field_list <- .fields |>
+        seq_along() |>
+        rlang::set_names(.fields)
+    .glossary |>
+        dplyr::filter(.data$Group == .group) |>
+        tidyr::hoist(.col = "Details", !!!.field_list)
+}
+
 GROUP_DETAILS <- DHC_VARIABLES |>
     dplyr::summarize(
         Concept = dplyr::first(.data$Concept),
@@ -117,12 +132,15 @@ GROUP_DETAILS <- DHC_VARIABLES |>
             .data$Group, .data$Width,
             \(.g, .c) {
                 .tmp <- DHC_VARIABLES |>
-                    hercacstables::hoist_table_glossary(
+                    hoist_group_details(
                         .g,
                         LETTERS[1:.c]
                     )
                 if (nrow(.tmp) > 1) {
-                    .tmp <- hiRx::only_informative_columns(.tmp)
+                    .tmp <- dplyr::select(.tmp,
+                                          tidyselect::where(
+                                              \(.) dplyr::n_distinct(.) > 1
+                                          ))
                 }
                 dplyr::mutate(
                     .tmp,
