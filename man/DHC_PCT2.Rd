@@ -7,13 +7,13 @@
 \format{
 a data frame with seven columns
 \describe{
-\item{Index}{<int> the row number of the variable}
-\item{Level}{<int> the level of aggregation of the variable}
-\item{One Person}{<lgl> single-person or multi-person household}
-\item{Children}{<lgl> are children present in the household}
-\item{Family}{<lgl> are the dwellers a family}
-\item{Male Householder}{<lgl> is there a male head of household}
-\item{Female Householder}{<lgl> is there a female head of household}
+\item{Index}{\verb{<int>} the row number of the variable}
+\item{Level}{\verb{<int>} the level of aggregation of the variable}
+\item{One Person}{\verb{<lgl>} single-person or multi-person household}
+\item{Children}{\verb{<lgl>} are children present in the household}
+\item{Family}{\verb{<lgl>} are the dwellers a family}
+\item{Male Householder}{\verb{<lgl>} is there a male head of household}
+\item{Female Householder}{\verb{<lgl>} is there a female head of household}
 }
 }
 \source{

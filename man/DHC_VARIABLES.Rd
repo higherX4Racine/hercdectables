@@ -7,11 +7,11 @@
 \format{
 a data frame with five columns
 \describe{
-\item{Concept}{<chr> a verbal description of the group's contents}
-\item{Group}{<chr> the code that designates the variable's group}
-\item{Index}{<int> the row number of the variable}
-\item{Variable}{<chr> the complete variable name}
-\item{Details}{<list> the details for this variable}
+\item{Concept}{\verb{<chr>} a verbal description of the group's contents}
+\item{Group}{\verb{<chr>} the code that designates the variable's group}
+\item{Index}{\verb{<int>} the row number of the variable}
+\item{Variable}{\verb{<chr>} the complete variable name}
+\item{Details}{\verb{<lst>} the details for this variable}
 }
 }
 \source{

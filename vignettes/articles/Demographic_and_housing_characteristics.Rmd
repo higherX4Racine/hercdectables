@@ -66,9 +66,11 @@ That is where glossary tables come in.
 
 A glossary table explicitly lays out the connection between the row number of a
 Census API variable and the demographic meaning that it represents.
-For example, the single variable "H12B_010N", might reports the number of
-rented households that are headed by a Black, non-Hispanic, householder.
-That captures information about race, ethnicity, home ownership, and number of
+For example, the single variable "H12B_010N" reports the number of households
+that are headed by a Black, non-Hispanic person who is renting, not an owner.
+Those nine characters therefore encode information about race, ethnicity, and
+home ownership.
+The value of the variable is another piece of information, the number of
 households.
 A glossary that explains group H12B would therefore need at least 4 columns.
 
@@ -77,8 +79,8 @@ for each group in the DHC.
 
 ## Characteristics of each group
 
-The glossary for each group will need enough columns to represent all of the
-detail that is captured by its rows.
+Each glossary will need enough columns to represent all of the details that are
+captured by its rows.
 The first step for glossing a group is to count how many columns appear in its
 variables' lists of details.
 
@@ -109,15 +111,6 @@ We'll use those as examples as we proceed.
 ```{r}
 #| label: hoist-group-details
 
-hoist_group_details <- function(.glossary, .group, .fields){
-    .field_list <- .fields |>
-        seq_along() |>
-        rlang::set_names(.fields)
-    .glossary |>
-        dplyr::filter(.data$Group == .group) |>
-        tidyr::hoist(.col = "Details", !!!.field_list)
-}
-
 GROUP_DETAILS <- DHC_VARIABLES |>
     dplyr::summarize(
         Concept = dplyr::first(.data$Concept),
@@ -132,9 +125,11 @@ GROUP_DETAILS <- DHC_VARIABLES |>
             .data$Group, .data$Width,
             \(.g, .c) {
                 .tmp <- DHC_VARIABLES |>
-                    hoist_group_details(
-                        .g,
-                        LETTERS[1:.c]
+                    dplyr::filter(
+                        .data$Group == .g
+                    ) |>
+                    hercdectables::hoist_group_details(
+                        "Details"
                     )
                 if (nrow(.tmp) > 1) {
                     .tmp <- dplyr::select(.tmp,
