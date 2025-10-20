@@ -2,6 +2,6 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom knitr opts_chunk
+utils::globalVariables(".data")
 ## usethis namespace: end
 NULL

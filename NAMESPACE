@@ -2,4 +2,4 @@
 
 export(fetch_variable_details)
 export(hoist_group_details)
-importFrom(knitr,opts_chunk)
+export(syabsbre)

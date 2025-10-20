@@ -8,7 +8,7 @@
 \subsection{GLOSSARY_OF_SINGLE_YEAR_AGE_BY_SEX}{
 
 An object of class \code{tbl_df}/\code{tbl}/\code{data.frame}
-209 rows and 4 columns
+with 209 rows and 4 columns
 \describe{
 \item{Sex      }{\verb{<chr>} NA, "Male," or "Female".}
 \item{Lower Age}{\verb{<int>} inclusive, because the extreme age groups are ranges.}

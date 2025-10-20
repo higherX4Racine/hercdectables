@@ -35,12 +35,18 @@ reference:
   - DHC_PCT2
   - DHC_VARIABLES
 
-- title: Single-Year Ages by Sex and Race/Ethnicity
+- title: Ethnicity by Race for Block-Level Counts
   desc: >
-    Tables for very specific age structure analysis.
+    Specific tables and rows with racial/ethnic counts
+  - GLOSSARY_OF_ETHNICITY_BY_RACE
+
+- title: Age by Sex and Race/Ethnicity
+  desc: >
+    Tables for age structure analysis.
   contents:
-  - GLOSSARY_OF_SINGLE_YEAR_AGE_BY_SEX
+  - GLOSSARY_OF_AGE_BY_SEX
   - GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE
+  - GLOSSARY_OF_SINGLE_YEAR_AGE_BY_SEX
 
 - title: Helpers
   desc: >

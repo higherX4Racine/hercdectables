@@ -30,6 +30,28 @@
 #' @source <https://api.census.gov/data/2020/dec/dhc/groups/PCT2.html>
 "DHC_PCT2"
 
+#' Sex by age for selected age categories.
+#'
+#' There are 10 of these tables, including one for all people and nine for
+#' people in different
+#' [OMB97](https://www.census.gov/library/visualizations/interactive/decennial-census-measurement-of-race-and-ethnicity-across-the-decades-1790-2020.html)
+#' racial/ethnic categories.
+#' The categories range from 1 to 5 or more years in width.
+#'
+#' @format ## GLOSSARY_OF_AGE_BY_SEX
+#' An object of class `tbl_df`/`tbl`/`data.frame`
+#' with 49 rows and 4 columns
+#' \describe{
+#'   \item{Index    }{`<int>` the row of the table that corresponds to this sex-age combination.}
+#'   \item{Sex      }{`<chr>` "All", "Male," or "Female".}
+#'   \item{Lower Age}{`<int>` inclusive}
+#'   \item{Upper Age}{`<int>` inclusive, with `999` as the value for "or over."}
+#' }
+#' @source <https://api.census.gov/data/2000/dec/sf1/groups/P012.html>
+#' @source <https://api.census.gov/data/2010/dec/sf1/groups/P12.html>
+#' @source <https://api.census.gov/data/2020/dec/dhc/groups/P12.html>
+"GLOSSARY_OF_AGE_BY_SEX"
+
 #' A very detailed accounting of people's ages by sex
 #'
 #' There are fifteen tables that count people by exact age, sex.
@@ -42,7 +64,7 @@
 #'
 #' @format ## GLOSSARY_OF_SINGLE_YEAR_AGE_BY_SEX
 #' An object of class `tbl_df`/`tbl`/`data.frame`
-#' 209 rows and 4 columns
+#' with 209 rows and 4 columns
 #' \describe{
 #'   \item{Sex      }{`<chr>` NA, "Male," or "Female".}
 #'   \item{Lower Age}{`<int>` inclusive, because the extreme age groups are ranges.}
@@ -73,3 +95,43 @@
 #' @source <https://api.census.gov/data/2010/dec/sf1/groups/PCT12.html>
 #' @source <https://api.census.gov/data/2020/dec/dhc/groups/PCT12.html>
 "GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE"
+
+#' Combinations of racial and Hispanic or non-Hispanic ethnic identities.
+#'
+#' Each vintage provides a slightly different path to its block-level counts of
+#' people by OMB race and ethnicity.
+#' All three tables have the same structure, however.
+#' That means there are two parts to this glossary:
+#'
+#' ### Indices
+#'
+#' An object of class `tbl_df`/`tbl`/`data.frame`
+#' with 13 rows and 3 columns
+#' \describe{
+#'   \item{Index}{`<int>` the row number of the variable}
+#'   \item{Ethnicity}{`<chr>` either "Hispanic" or "Not Hispanic"}
+#'   \item{Race}{`<chr>` One of the seven OMB racial categories}
+#' }
+#'
+#' ### Vintages
+#'
+#' An object of class `tbl_df`/`tbl`/`data.frame`
+#' with 3 rows and 4 columns
+#' \describe{
+#'   \item{Vintage}{`<int>` a decennial census year}
+#'   \item{Product}{`<chr>` a short code for building the API URL}
+#'   \item{Group}{`<chr>` the code for the table}
+#'   \item{Separator}{`<chr>` used for building variable names, either "" or "_"}
+#'   \item{Suffix}{`<chr>` Later vintages have multiple pieces of information per index, distinguished by suffix}
+#' }
+#'
+#' @format ## GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE
+#' A list of two data tables
+#' \describe{
+#'   \item{Indices}{Correspondences between row number and race/ethnicity}
+#'   \item{Vintages}{The specific information needed to pull the data from each decennial census}
+#' }
+#' @source <https://api.census.gov/data/2000/dec/sf1/groups/P008.html>
+#' @source <https://api.census.gov/data/2010/dec/sf1/groups/P5.html>
+#' @source <https://api.census.gov/data/2020/dec/dhc/groups/P5.html>
+"GLOSSARY_OF_ETHNICITY_BY_RACE"
