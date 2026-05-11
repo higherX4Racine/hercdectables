@@ -1,0 +1,94 @@
+﻿Vintage,Group,Index,Variable,Tenure,Ethnicity,Race
+2000,H011,1,H011001,All,All,All
+2000,H011,2,H011002,Owner occupied,All,All
+2000,H011,3,H011003,Owner occupied,All,White
+2000,H011,4,H011004,Owner occupied,All,Black or African American
+2000,H011,5,H011005,Owner occupied,All,American Indian and Alaska Native
+2000,H011,6,H011006,Owner occupied,All,Asian
+2000,H011,7,H011007,Owner occupied,All,Native Hawaiian and Other Pacific Islander
+2000,H011,8,H011008,Owner occupied,All,Some other race
+2000,H011,9,H011009,Owner occupied,All,Two or more races
+2000,H011,10,H011010,Renter occupied,All,All
+2000,H011,11,H011011,Renter occupied,All,White
+2000,H011,12,H011012,Renter occupied,All,Black or African American
+2000,H011,13,H011013,Renter occupied,All,American Indian and Alaska Native
+2000,H011,14,H011014,Renter occupied,All,Asian
+2000,H011,15,H011015,Renter occupied,All,Native Hawaiian and Other Pacific Islander
+2000,H011,16,H011016,Renter occupied,All,Some other race
+2000,H011,17,H011017,Renter occupied,All,Two or more races
+2000,H012,1,H012001,All,Hispanic or Latino,All
+2000,H012,2,H012002,Owner occupied,Hispanic or Latino,All
+2000,H012,3,H012003,Renter occupied,Hispanic or Latino,All
+2000,H013,1,H013001,All,Not Hispanic or Latino,White
+2000,H013,2,H013002,Owner occupied,Not Hispanic or Latino,White
+2000,H013,3,H013003,Renter occupied,Not Hispanic or Latino,White
+2010,HCT001,1,HCT001001,All,All,All
+2010,HCT001,2,HCT001002,Owner occupied,All,All
+2010,HCT001,3,HCT001003,Owner occupied,Not Hispanic or Latino,All
+2010,HCT001,4,HCT001004,Owner occupied,Not Hispanic or Latino,White
+2010,HCT001,5,HCT001005,Owner occupied,Not Hispanic or Latino,Black or African American
+2010,HCT001,6,HCT001006,Owner occupied,Not Hispanic or Latino,American Indian and Alaska Native
+2010,HCT001,7,HCT001007,Owner occupied,Not Hispanic or Latino,Asian
+2010,HCT001,8,HCT001008,Owner occupied,Not Hispanic or Latino,Native Hawaiian and Other Pacific Islander
+2010,HCT001,9,HCT001009,Owner occupied,Not Hispanic or Latino,Some Other Race
+2010,HCT001,10,HCT001010,Owner occupied,Not Hispanic or Latino,Two or More Races
+2010,HCT001,11,HCT001011,Owner occupied,Hispanic or Latino,All
+2010,HCT001,12,HCT001012,Owner occupied,Hispanic or Latino,White
+2010,HCT001,13,HCT001013,Owner occupied,Hispanic or Latino,Black or African American
+2010,HCT001,14,HCT001014,Owner occupied,Hispanic or Latino,American Indian and Alaska Native
+2010,HCT001,15,HCT001015,Owner occupied,Hispanic or Latino,Asian
+2010,HCT001,16,HCT001016,Owner occupied,Hispanic or Latino,Native Hawaiian and Other Pacific Islander
+2010,HCT001,17,HCT001017,Owner occupied,Hispanic or Latino,Some Other Race
+2010,HCT001,18,HCT001018,Owner occupied,Hispanic or Latino,Two or More Races
+2010,HCT001,19,HCT001019,Renter occupied,All,All
+2010,HCT001,20,HCT001020,Renter occupied,Not Hispanic or Latino,All
+2010,HCT001,21,HCT001021,Renter occupied,Not Hispanic or Latino,White
+2010,HCT001,22,HCT001022,Renter occupied,Not Hispanic or Latino,Black or African American
+2010,HCT001,23,HCT001023,Renter occupied,Not Hispanic or Latino,American Indian and Alaska Native
+2010,HCT001,24,HCT001024,Renter occupied,Not Hispanic or Latino,Asian
+2010,HCT001,25,HCT001025,Renter occupied,Not Hispanic or Latino,Native Hawaiian and Other Pacific Islander
+2010,HCT001,26,HCT001026,Renter occupied,Not Hispanic or Latino,Some Other Race
+2010,HCT001,27,HCT001027,Renter occupied,Not Hispanic or Latino,Two or More Races
+2010,HCT001,28,HCT001028,Renter occupied,Hispanic or Latino,All
+2010,HCT001,29,HCT001029,Renter occupied,Hispanic or Latino,White
+2010,HCT001,30,HCT001030,Renter occupied,Hispanic or Latino,Black or African American
+2010,HCT001,31,HCT001031,Renter occupied,Hispanic or Latino,American Indian and Alaska Native
+2010,HCT001,32,HCT001032,Renter occupied,Hispanic or Latino,Asian
+2010,HCT001,33,HCT001033,Renter occupied,Hispanic or Latino,Native Hawaiian and Other Pacific Islander
+2010,HCT001,34,HCT001034,Renter occupied,Hispanic or Latino,Some Other Race
+2010,HCT001,35,HCT001035,Renter occupied,Hispanic or Latino,Two or More Races
+2020,HCT1,1,HCT1_001N,All,All,All
+2020,HCT1,2,HCT1_002N,Owner occupied,All,All
+2020,HCT1,3,HCT1_003N,Owner occupied,Not Hispanic or Latino,All
+2020,HCT1,4,HCT1_004N,Owner occupied,Not Hispanic or Latino,White
+2020,HCT1,5,HCT1_005N,Owner occupied,Not Hispanic or Latino,Black or African American
+2020,HCT1,6,HCT1_006N,Owner occupied,Not Hispanic or Latino,American Indian and Alaska Native
+2020,HCT1,7,HCT1_007N,Owner occupied,Not Hispanic or Latino,Asian
+2020,HCT1,8,HCT1_008N,Owner occupied,Not Hispanic or Latino,Native Hawaiian and Other Pacific Islander
+2020,HCT1,9,HCT1_009N,Owner occupied,Not Hispanic or Latino,Some Other Race
+2020,HCT1,10,HCT1_010N,Owner occupied,Not Hispanic or Latino,Two or More Races
+2020,HCT1,11,HCT1_011N,Owner occupied,Hispanic or Latino,All
+2020,HCT1,12,HCT1_012N,Owner occupied,Hispanic or Latino,White
+2020,HCT1,13,HCT1_013N,Owner occupied,Hispanic or Latino,Black or African American
+2020,HCT1,14,HCT1_014N,Owner occupied,Hispanic or Latino,American Indian and Alaska Native
+2020,HCT1,15,HCT1_015N,Owner occupied,Hispanic or Latino,Asian
+2020,HCT1,16,HCT1_016N,Owner occupied,Hispanic or Latino,Native Hawaiian and Other Pacific Islander
+2020,HCT1,17,HCT1_017N,Owner occupied,Hispanic or Latino,Some Other Race
+2020,HCT1,18,HCT1_018N,Owner occupied,Hispanic or Latino,Two or More Races
+2020,HCT1,19,HCT1_019N,Renter occupied,All,All
+2020,HCT1,20,HCT1_020N,Renter occupied,Not Hispanic or Latino,All
+2020,HCT1,21,HCT1_021N,Renter occupied,Not Hispanic or Latino,White
+2020,HCT1,22,HCT1_022N,Renter occupied,Not Hispanic or Latino,Black or African American
+2020,HCT1,23,HCT1_023N,Renter occupied,Not Hispanic or Latino,American Indian and Alaska Native
+2020,HCT1,24,HCT1_024N,Renter occupied,Not Hispanic or Latino,Asian
+2020,HCT1,25,HCT1_025N,Renter occupied,Not Hispanic or Latino,Native Hawaiian and Other Pacific Islander
+2020,HCT1,26,HCT1_026N,Renter occupied,Not Hispanic or Latino,Some Other Race
+2020,HCT1,27,HCT1_027N,Renter occupied,Not Hispanic or Latino,Two or More Races
+2020,HCT1,28,HCT1_028N,Renter occupied,Hispanic or Latino,All
+2020,HCT1,29,HCT1_029N,Renter occupied,Hispanic or Latino,White
+2020,HCT1,30,HCT1_030N,Renter occupied,Hispanic or Latino,Black or African American
+2020,HCT1,31,HCT1_031N,Renter occupied,Hispanic or Latino,American Indian and Alaska Native
+2020,HCT1,32,HCT1_032N,Renter occupied,Hispanic or Latino,Asian
+2020,HCT1,33,HCT1_033N,Renter occupied,Hispanic or Latino,Native Hawaiian and Other Pacific Islander
+2020,HCT1,34,HCT1_034N,Renter occupied,Hispanic or Latino,Some Other Race
+2020,HCT1,35,HCT1_035N,Renter occupied,Hispanic or Latino,Two or More Races
