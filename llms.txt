@@ -1,0 +1,83 @@
+# hercdectables
+
+hercdectables is a data package that contains glossaries for US Census
+groups.
+
+A glossary is a mapping from variable names to a collection of explicit
+values that the variables encode. For example, a variable in the Census
+database might report a count of the number of people from one
+demographic group living in one type of housing and primarily speaking
+one language. The glossary for that group would include columns of
+demographic group, housing type, and primary language. These glossaries
+explain the Census API’s Decennial group tables.
+
+## Installation
+
+You can install the development version of hercdectables from
+[GitHub](https://github.com/) with:
+
+``` r
+
+# install.packages("pak")
+pak::pak("higherX4Racine/hercdectables")
+```
+
+# Package index
+
+## Demographic and Housing Characteristics
+
+Groups from the Demographic and Housing Characteristics product
+
+- [`DHC_PCT2`](https://higherx4racine.github.io/hercdectables/reference/DHC_PCT2.md)
+  : Glossary for table PCT2 in the Demographic and Housing
+  Characteristics survey.
+- [`DHC_VARIABLES`](https://higherx4racine.github.io/hercdectables/reference/DHC_VARIABLES.md)
+  : Variables from Demographic and Housing Characteristics survey.
+
+## Ethnicity by Race for Block-Level Counts
+
+Specific tables and rows with racial/ethnic counts
+
+- [`GLOSSARY_OF_ETHNICITY_BY_RACE`](https://higherx4racine.github.io/hercdectables/reference/GLOSSARY_OF_ETHNICITY_BY_RACE.md)
+  : Combinations of racial and Hispanic or non-Hispanic ethnic
+  identities.
+
+## Age by Sex and Race/Ethnicity
+
+Tables for age structure analysis.
+
+- [`GLOSSARY_OF_AGE_BY_SEX`](https://higherx4racine.github.io/hercdectables/reference/GLOSSARY_OF_AGE_BY_SEX.md)
+  : Sex by age for selected age categories.
+- [`GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE`](https://higherx4racine.github.io/hercdectables/reference/GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE.md)
+  : Combinations of racial and Hispanic or non-Hispanic ethnic
+  identities.
+- [`GLOSSARY_OF_SINGLE_YEAR_AGE_BY_SEX`](https://higherx4racine.github.io/hercdectables/reference/GLOSSARY_OF_SINGLE_YEAR_AGE_BY_SEX.md)
+  : A very detailed accounting of people's ages by sex
+
+## Tenure
+
+Tables for looking at home ownership and renting
+
+- [`GLOSSARY_OF_TENURE_BY_ETHNICITY_AND_RACE`](https://higherx4racine.github.io/hercdectables/reference/GLOSSARY_OF_TENURE_BY_ETHNICITY_AND_RACE.md)
+  : Number of households by owning/renting by Hispanic/not by OMB race
+
+## Helpers
+
+Functions for creating/working with glossaries about the Decennial
+Census.
+
+- [`fetch_variable_details()`](https://higherx4racine.github.io/hercdectables/reference/fetch_variable_details.md)
+  : Download and parse the JSON representation of a decennial table's
+  variables
+- [`hoist_group_details()`](https://higherx4racine.github.io/hercdectables/reference/hoist_group_details.md)
+  : Unpack the ragged list of details about a group's variables
+- [`syabsbre()`](https://higherx4racine.github.io/hercdectables/reference/syabsbre.md)
+  : Fetch population data broken down by single-year age, sex, and
+  race/ethnicity
+
+# Articles
+
+### Data products from the Decennial Census
+
+- [Demographic and housing
+  characteristics](https://higherx4racine.github.io/hercdectables/articles/Demographic_and_housing_characteristics.md):

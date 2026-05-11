@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hercdectables</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,18 +42,11 @@
     </div>
 
     <div class="section level2">
-      <h2 id="glossaries">Glossaries<a class="anchor" aria-label="anchor" href="#glossaries"></a></h2>
+      <h2 id="demographic-and-housing-characteristics">Demographic and Housing Characteristics<a class="anchor" aria-label="anchor" href="#demographic-and-housing-characteristics"></a></h2>
 
-      <div class="section-desc"><p>Mappings between variable rows and the context information they encode.</p></div>
-
-
-    </div><div class="section level2">
-
-      <h3 id="demographic-and-housing-characteristics">Demographic and Housing Characteristics<a class="anchor" aria-label="anchor" href="#demographic-and-housing-characteristics"></a></h3>
       <div class="section-desc"><p>Groups from the Demographic and Housing Characteristics product</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -64,34 +57,116 @@
 
         </dt>
         <dd>Glossary for table PCT2 in the Demographic and Housing Characteristics survey.</dd>
+
+        <dt>
+
+          <code><a href="DHC_VARIABLES.html">DHC_VARIABLES</a></code>
+
+        </dt>
+        <dd>Variables from Demographic and Housing Characteristics survey.</dd>
       </dl></div><div class="section level2">
-      <h2 id="variables">Variables<a class="anchor" aria-label="anchor" href="#variables"></a></h2>
+      <h2 id="ethnicity-by-race-for-block-level-counts">Ethnicity by Race for Block-Level Counts<a class="anchor" aria-label="anchor" href="#ethnicity-by-race-for-block-level-counts"></a></h2>
 
-      <div class="section-desc"><p>Tables of variables by group, with details as lists.</p></div>
+      <div class="section-desc"><p>Specific tables and rows with racial/ethnic counts</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
 
       <dl><dt>
 
-          <code><a href="DHC_VARIABLES.html">DHC_VARIABLES</a></code>
+          <code><a href="GLOSSARY_OF_ETHNICITY_BY_RACE.html">GLOSSARY_OF_ETHNICITY_BY_RACE</a></code>
 
         </dt>
-        <dd>Variables from Demographic and Housing Characteristics survey.</dd>
+        <dd>Combinations of racial and Hispanic or non-Hispanic ethnic identities.</dd>
+      </dl></div><div class="section level2">
+      <h2 id="age-by-sex-and-race-ethnicity">Age by Sex and Race/Ethnicity<a class="anchor" aria-label="anchor" href="#age-by-sex-and-race-ethnicity"></a></h2>
+
+      <div class="section-desc"><p>Tables for age structure analysis.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="GLOSSARY_OF_AGE_BY_SEX.html">GLOSSARY_OF_AGE_BY_SEX</a></code>
+
+        </dt>
+        <dd>Sex by age for selected age categories.</dd>
+
+        <dt>
+
+          <code><a href="GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE.html">GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE</a></code>
+
+        </dt>
+        <dd>Combinations of racial and Hispanic or non-Hispanic ethnic identities.</dd>
+
+        <dt>
+
+          <code><a href="GLOSSARY_OF_SINGLE_YEAR_AGE_BY_SEX.html">GLOSSARY_OF_SINGLE_YEAR_AGE_BY_SEX</a></code>
+
+        </dt>
+        <dd>A very detailed accounting of people's ages by sex</dd>
+      </dl></div><div class="section level2">
+      <h2 id="tenure">Tenure<a class="anchor" aria-label="anchor" href="#tenure"></a></h2>
+
+      <div class="section-desc"><p>Tables for looking at home ownership and renting</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="GLOSSARY_OF_TENURE_BY_ETHNICITY_AND_RACE.html">GLOSSARY_OF_TENURE_BY_ETHNICITY_AND_RACE</a></code>
+
+        </dt>
+        <dd>Number of households by owning/renting by Hispanic/not by OMB race</dd>
+      </dl></div><div class="section level2">
+      <h2 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
+
+      <div class="section-desc"><p>Functions for creating/working with glossaries about the Decennial Census.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="fetch_variable_details.html">fetch_variable_details()</a></code>
+
+        </dt>
+        <dd>Download and parse the JSON representation of a decennial table's variables</dd>
+
+        <dt>
+
+          <code><a href="hoist_group_details.html">hoist_group_details()</a></code>
+
+        </dt>
+        <dd>Unpack the ragged list of details about a group's variables</dd>
+
+        <dt>
+
+          <code><a href="syabsbre.html">syabsbre()</a></code>
+
+        </dt>
+        <dd>Fetch population data broken down by single-year age, sex, and race/ethnicity</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Ben Taft.</p>
+  <p>Developed by Higher Expectations for Racine County.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

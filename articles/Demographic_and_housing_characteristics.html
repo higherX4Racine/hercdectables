@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hercdectables</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,20 +108,22 @@ in.</p>
 </h2>
 <p>A glossary table explicitly lays out the connection between the row
 number of a Census API variable and the demographic meaning that it
-represents. For example, the single variable “H12B_010N”, might reports
-the number of rented households that are headed by a Black,
-non-Hispanic, householder. That captures information about race,
-ethnicity, home ownership, and number of households. A glossary that
-explains group H12B would therefore need at least 4 columns.</p>
+represents. For example, the single variable “H12B_010N” reports the
+number of households that are headed by a Black, non-Hispanic person who
+is renting, not an owner. Those nine characters therefore encode
+information about race, ethnicity, and home ownership. The value of the
+variable is another piece of information, the number of households. A
+glossary that explains group H12B would therefore need at least 4
+columns.</p>
 <p>This report documents the process that I will follow to create a
 glossary table for each group in the DHC.</p>
 </div>
 <div class="section level2">
 <h2 id="characteristics-of-each-group">Characteristics of each group<a class="anchor" aria-label="anchor" href="#characteristics-of-each-group"></a>
 </h2>
-<p>The glossary for each group will need enough columns to represent all
-of the detail that is captured by its rows. The first step for glossing
-a group is to count how many columns appear in its variables’ lists of
+<p>Each glossary will need enough columns to represent all of the
+details that are captured by its rows. The first step for glossing a
+group is to count how many columns appear in its variables’ lists of
 details.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DHC_VARIABLES</span> <span class="op">|&gt;</span></span>
@@ -171,16 +173,7 @@ details.</p>
 details, but many will need more. Three different tables will need six
 columns! We’ll use those as examples as we proceed.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hoist_group_details</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">.glossary</span>, <span class="va">.group</span>, <span class="va">.fields</span><span class="op">)</span><span class="op">{</span></span>
-<span>    <span class="va">.field_list</span> <span class="op">&lt;-</span> <span class="va">.fields</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="va">.fields</span><span class="op">)</span></span>
-<span>    <span class="va">.glossary</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Group</span> <span class="op">==</span> <span class="va">.group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/hoist.html" class="external-link">hoist</a></span><span class="op">(</span>.col <span class="op">=</span> <span class="st">"Details"</span>, <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">.field_list</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">GROUP_DETAILS</span> <span class="op">&lt;-</span> <span class="va">DHC_VARIABLES</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">GROUP_DETAILS</span> <span class="op">&lt;-</span> <span class="va">DHC_VARIABLES</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
 <span>        Concept <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/nth.html" class="external-link">first</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Concept</span><span class="op">)</span>,</span>
 <span>        Length <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -194,9 +187,11 @@ columns! We’ll use those as examples as we proceed.</p>
 <span>            <span class="va">.data</span><span class="op">$</span><span class="va">Group</span>, <span class="va">.data</span><span class="op">$</span><span class="va">Width</span>,</span>
 <span>            \<span class="op">(</span><span class="va">.g</span>, <span class="va">.c</span><span class="op">)</span> <span class="op">{</span></span>
 <span>                <span class="va">.tmp</span> <span class="op">&lt;-</span> <span class="va">DHC_VARIABLES</span> <span class="op">|&gt;</span></span>
-<span>                    <span class="fu">hoist_group_details</span><span class="op">(</span></span>
-<span>                        <span class="va">.g</span>,</span>
-<span>                        <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">.c</span><span class="op">]</span></span>
+<span>                    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>                        <span class="va">.data</span><span class="op">$</span><span class="va">Group</span> <span class="op">==</span> <span class="va">.g</span></span>
+<span>                    <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>                    <span class="fu">hercdectables</span><span class="fu">::</span><span class="fu"><a href="../reference/hoist_group_details.html">hoist_group_details</a></span><span class="op">(</span></span>
+<span>                        <span class="st">"Details"</span></span>
 <span>                    <span class="op">)</span></span>
 <span>                <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.tmp</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
 <span>                    <span class="va">.tmp</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">.tmp</span>,</span>
@@ -939,11 +934,11 @@ exactly equal, to its level of aggregation.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Ben Taft.</p>
+  <p>Developed by Higher Expectations for Racine County.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
