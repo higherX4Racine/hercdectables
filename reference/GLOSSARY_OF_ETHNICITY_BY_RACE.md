@@ -38,7 +38,7 @@ A list of two data tables
 
 ### Indices
 
-An object of class `tbl_df`/`tbl`/`data.frame` with 13 rows and 3
+An object of class `tbl_df`/`tbl`/`data.frame` with 17 rows and 3
 columns
 
 - Index:
