@@ -106,7 +106,7 @@
 #' ### Indices
 #'
 #' An object of class `tbl_df`/`tbl`/`data.frame`
-#' with 13 rows and 3 columns
+#' with 17 rows and 3 columns
 #' \describe{
 #'   \item{Index}{`<int>` the row number of the variable}
 #'   \item{Ethnicity}{`<chr>` either "Hispanic" or "Not Hispanic"}

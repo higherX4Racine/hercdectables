@@ -34,7 +34,7 @@ That means there are two parts to this glossary:
 \subsection{Indices}{
 
 An object of class \code{tbl_df}/\code{tbl}/\code{data.frame}
-with 13 rows and 3 columns
+with 17 rows and 3 columns
 \describe{
 \item{Index}{\verb{<int>} the row number of the variable}
 \item{Ethnicity}{\verb{<chr>} either "Hispanic" or "Not Hispanic"}
