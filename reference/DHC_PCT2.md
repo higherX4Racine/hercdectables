@@ -17,7 +17,7 @@ a data frame with seven columns
 
   `<int>` the row number of the variable
 
-- Level:
+- Level of Aggregation:
 
   `<int>` the level of aggregation of the variable
 

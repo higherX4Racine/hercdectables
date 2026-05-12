@@ -59,6 +59,8 @@ count how many columns appear in its variables’ lists of details.
 DHC_VARIABLES |>
     dplyr::summarize(
         `Columns Present` = .data$Details |>
+            purrr::map(stringr::str_squish) |>
+            purrr::map(\(.) .[nchar(.) > 1])  |>
             purrr::map_int(length) |>
             max(),
         .by = "Group"
@@ -74,16 +76,17 @@ DHC_VARIABLES |>
 
 | Columns Present | Frequency |
 |----------------:|----------:|
-|               2 |        46 |
-|               3 |       112 |
-|               4 |        45 |
-|               5 |        43 |
-|               6 |         3 |
+|               0 |         3 |
+|               1 |        43 |
+|               2 |       112 |
+|               3 |        45 |
+|               4 |        43 |
+|               5 |         3 |
 
 How many detail columns are needed by DHC groups. {.table}
 
-Most of the groups will need three or fewer columns to capture their
-details, but many will need more. Three different tables will need six
+Most of the groups will need two or fewer columns to capture their
+details, but many will need more. Three different tables will need five
 columns! We’ll use those as examples as we proceed.
 
 ``` r
@@ -91,36 +94,20 @@ columns! We’ll use those as examples as we proceed.
 GROUP_DETAILS <- DHC_VARIABLES |>
     dplyr::summarize(
         Concept = dplyr::first(.data$Concept),
-        Length = dplyr::n(),
-        Width = .data$Details |>
-            purrr::map_int(length) |>
-            max(),
+        Variables = dplyr::pick("Index", "Variable", "Details") |>
+            dplyr::mutate(
+                Details = .data$Details |>
+                    purrr::map(stringr::str_squish) |>
+                    purrr::map(\(.) .[nchar(.) > 1]) |>
+                    purrr::map(\(.) tibble::as_tibble_row(., .name_repair = \(.) LETTERS[seq_along(.)]))
+                ) |>
+            tidyr::unnest("Details") |>
+            list(),
         .by = "Group"
     ) |>
     dplyr::mutate(
-        Variables = purrr::map2(
-            .data$Group, .data$Width,
-            \(.g, .c) {
-                .tmp <- DHC_VARIABLES |>
-                    dplyr::filter(
-                        .data$Group == .g
-                    ) |>
-                    hercdectables::hoist_group_details(
-                        "Details"
-                    )
-                if (nrow(.tmp) > 1) {
-                    .tmp <- dplyr::select(.tmp,
-                                          tidyselect::where(
-                                              \(.) dplyr::n_distinct(.) > 1
-                                          ))
-                }
-                dplyr::mutate(
-                    .tmp,
-                    dplyr::across(tidyselect::any_of(LETTERS[1:.c]),
-                                  \(.) dplyr::coalesce(., ""))
-                )
-            }
-        )
+        Length = purrr::map_int(.data$Variables, nrow),
+        Width = purrr::map_int(.data$Variables, ncol) - 2L
     )
 ```
 
@@ -128,29 +115,53 @@ GROUP_DETAILS <- DHC_VARIABLES |>
 
 EXAMPLE_GROUPS <- GROUP_DETAILS |>
     dplyr::filter(
-        .data$Width == 6
+        .data$Width == 5
     ) |>
     dplyr::select(
-        !tidyselect::any_of(c("Variables", "Width"))
+        !tidyselect::any_of(c("Variables"))
     )
 
 knitr::kable(
     EXAMPLE_GROUPS,
-    caption = "DHC groups that need six columns to capture their details"
+    caption = "DHC groups that need five columns to capture their details"
 )
 ```
 
-| Group | Concept | Length |
-|:---|:---|---:|
-| H14 | TENURE BY HOUSEHOLD TYPE BY AGE OF HOUSEHOLDER | 69 |
-| PCT19 | GROUP QUARTERS POPULATION BY SEX BY AGE BY GROUP QUARTERS TYPE | 195 |
-| PCT2 | HOUSEHOLD SIZE BY HOUSEHOLD TYPE BY PRESENCE OF OWN CHILDREN | 19 |
+| Group | Concept | Length | Width |
+|:---|:---|---:|---:|
+| H14 | TENURE BY HOUSEHOLD TYPE BY AGE OF HOUSEHOLDER | 69 | 5 |
+| PCT19 | GROUP QUARTERS POPULATION BY SEX BY AGE BY GROUP QUARTERS TYPE | 195 | 5 |
+| PCT2 | HOUSEHOLD SIZE BY HOUSEHOLD TYPE BY PRESENCE OF OWN CHILDREN | 19 | 5 |
 
-DHC groups that need six columns to capture their details {.table}
+DHC groups that need five columns to capture their details {.table
+style="width:100%;"}
+
+``` r
+
+
+GROUP_DETAILS |>
+    dplyr::filter(
+        .data$Width == 0L
+    ) |>
+    dplyr::select(
+        !tidyselect::any_of(c("Variables"))
+    ) |>
+    knitr::kable(
+        caption = "DHC groups that need ZERO columns to capture their details"
+    )
+```
+
+| Group | Concept                                    | Length | Width |
+|:------|:-------------------------------------------|-------:|------:|
+| H1    | HOUSING UNITS                              |      1 |     0 |
+| H8    | TOTAL POPULATION IN OCCUPIED HOUSING UNITS |      1 |     0 |
+| P1    | TOTAL POPULATION                           |      1 |     0 |
+
+DHC groups that need ZERO columns to capture their details {.table}
 
 ## An example glossary: PCT2
 
-This is what the details of table PT2 look like after hoisting.
+This is what the details of table PCT2 look like after hoisting.
 
 ``` r
 
@@ -169,27 +180,27 @@ knitr::kable(
 )
 ```
 
-| Index | Variable | B | C | D | E | F |
+| Index | Variable | A | B | C | D | E |
 |---:|:---|:---|:---|:---|:---|:---|
-| 1 | PCT2_001N |  |  |  |  |  |
-| 2 | PCT2_002N | 1-person household |  |  |  |  |
-| 3 | PCT2_003N | 1-person household | Male householder |  |  |  |
-| 4 | PCT2_004N | 1-person household | Female householder |  |  |  |
-| 5 | PCT2_005N | 2-or-more-person household |  |  |  |  |
-| 6 | PCT2_006N | 2-or-more-person household | Family households |  |  |  |
-| 7 | PCT2_007N | 2-or-more-person household | Family households | Married couple family |  |  |
-| 8 | PCT2_008N | 2-or-more-person household | Family households | Married couple family | With own children under 18 years |  |
-| 9 | PCT2_009N | 2-or-more-person household | Family households | Married couple family | No own children under 18 years |  |
-| 10 | PCT2_010N | 2-or-more-person household | Family households | Other family |  |  |
-| 11 | PCT2_011N | 2-or-more-person household | Family households | Other family | Male householder, no spouse present |  |
+| 1 | PCT2_001N | NA | NA | NA | NA | NA |
+| 2 | PCT2_002N | 1-person household | NA | NA | NA | NA |
+| 3 | PCT2_003N | 1-person household | Male householder | NA | NA | NA |
+| 4 | PCT2_004N | 1-person household | Female householder | NA | NA | NA |
+| 5 | PCT2_005N | 2-or-more-person household | NA | NA | NA | NA |
+| 6 | PCT2_006N | 2-or-more-person household | Family households | NA | NA | NA |
+| 7 | PCT2_007N | 2-or-more-person household | Family households | Married couple family | NA | NA |
+| 8 | PCT2_008N | 2-or-more-person household | Family households | Married couple family | With own children under 18 years | NA |
+| 9 | PCT2_009N | 2-or-more-person household | Family households | Married couple family | No own children under 18 years | NA |
+| 10 | PCT2_010N | 2-or-more-person household | Family households | Other family | NA | NA |
+| 11 | PCT2_011N | 2-or-more-person household | Family households | Other family | Male householder, no spouse present | NA |
 | 12 | PCT2_012N | 2-or-more-person household | Family households | Other family | Male householder, no spouse present | With own children under 18 years |
 | 13 | PCT2_013N | 2-or-more-person household | Family households | Other family | Male householder, no spouse present | No own children under 18 years |
-| 14 | PCT2_014N | 2-or-more-person household | Family households | Other family | Female householder, no spouse present |  |
+| 14 | PCT2_014N | 2-or-more-person household | Family households | Other family | Female householder, no spouse present | NA |
 | 15 | PCT2_015N | 2-or-more-person household | Family households | Other family | Female householder, no spouse present | With own children under 18 years |
 | 16 | PCT2_016N | 2-or-more-person household | Family households | Other family | Female householder, no spouse present | No own children under 18 years |
-| 17 | PCT2_017N | 2-or-more-person household | Nonfamily households |  |  |  |
-| 18 | PCT2_018N | 2-or-more-person household | Nonfamily households | Male householder |  |  |
-| 19 | PCT2_019N | 2-or-more-person household | Nonfamily households | Female householder |  |  |
+| 17 | PCT2_017N | 2-or-more-person household | Nonfamily households | NA | NA | NA |
+| 18 | PCT2_018N | 2-or-more-person household | Nonfamily households | Male householder | NA | NA |
+| 19 | PCT2_019N | 2-or-more-person household | Nonfamily households | Female householder | NA | NA |
 
 The details of group PCT2 {.table}
 
@@ -198,27 +209,27 @@ value in a particular row and column depends upon the structure of a
 table. Consequently, we cannot look at each value by itself. We have to
 try to make meaning of the entire table at once.
 
-| Index | Level | One Person | Children | Family | Male Householder | Female Householder |
-|------:|------:|:-----------|:---------|:-------|:-----------------|:-------------------|
-|     1 |     5 | NA         | NA       | NA     | NA               | NA                 |
-|     2 |     1 | TRUE       | FALSE    | FALSE  | NA               | NA                 |
-|     3 |     0 | TRUE       | FALSE    | FALSE  | TRUE             | FALSE              |
-|     4 |     0 | TRUE       | FALSE    | FALSE  | FALSE            | TRUE               |
-|     5 |     4 | FALSE      | NA       | NA     | NA               | NA                 |
-|     6 |     3 | FALSE      | NA       | TRUE   | NA               | NA                 |
-|     7 |     1 | FALSE      | NA       | TRUE   | TRUE             | TRUE               |
-|     8 |     0 | FALSE      | TRUE     | TRUE   | TRUE             | TRUE               |
-|     9 |     0 | FALSE      | FALSE    | TRUE   | TRUE             | TRUE               |
-|    10 |     2 | FALSE      | NA       | TRUE   | NA               | NA                 |
-|    11 |     1 | FALSE      | NA       | TRUE   | TRUE             | FALSE              |
-|    12 |     0 | FALSE      | TRUE     | TRUE   | TRUE             | FALSE              |
-|    13 |     0 | FALSE      | FALSE    | TRUE   | TRUE             | FALSE              |
-|    14 |     1 | FALSE      | NA       | TRUE   | FALSE            | TRUE               |
-|    15 |     0 | FALSE      | TRUE     | TRUE   | FALSE            | TRUE               |
-|    16 |     0 | FALSE      | FALSE    | TRUE   | FALSE            | TRUE               |
-|    17 |     1 | FALSE      | FALSE    | FALSE  | NA               | NA                 |
-|    18 |     0 | FALSE      | FALSE    | FALSE  | TRUE             | FALSE              |
-|    19 |     0 | FALSE      | FALSE    | FALSE  | FALSE            | TRUE               |
+| Index | Level of Aggregation | One Person | Children | Family | Male Householder | Female Householder |
+|---:|---:|:---|:---|:---|:---|:---|
+| 1 | 5 | NA | NA | NA | NA | NA |
+| 2 | 1 | TRUE | FALSE | FALSE | NA | NA |
+| 3 | 0 | TRUE | FALSE | FALSE | TRUE | FALSE |
+| 4 | 0 | TRUE | FALSE | FALSE | FALSE | TRUE |
+| 5 | 4 | FALSE | NA | NA | NA | NA |
+| 6 | 3 | FALSE | NA | TRUE | NA | NA |
+| 7 | 1 | FALSE | NA | TRUE | TRUE | TRUE |
+| 8 | 0 | FALSE | TRUE | TRUE | TRUE | TRUE |
+| 9 | 0 | FALSE | FALSE | TRUE | TRUE | TRUE |
+| 10 | 2 | FALSE | NA | TRUE | NA | NA |
+| 11 | 1 | FALSE | NA | TRUE | TRUE | FALSE |
+| 12 | 0 | FALSE | TRUE | TRUE | TRUE | FALSE |
+| 13 | 0 | FALSE | FALSE | TRUE | TRUE | FALSE |
+| 14 | 1 | FALSE | NA | TRUE | FALSE | TRUE |
+| 15 | 0 | FALSE | TRUE | TRUE | FALSE | TRUE |
+| 16 | 0 | FALSE | FALSE | TRUE | FALSE | TRUE |
+| 17 | 1 | FALSE | FALSE | FALSE | NA | NA |
+| 18 | 0 | FALSE | FALSE | FALSE | TRUE | FALSE |
+| 19 | 0 | FALSE | FALSE | FALSE | FALSE | TRUE |
 
 Glossed details from group PCT2 {.table}
 
@@ -227,20 +238,21 @@ factor. I’m not sure that this is a good choice. It might be better to
 use an explicit value like ““,”All”, or “\*“. It does make things
 consistent across factors and Boolean fields, though.
 
-### Levels of summary
+### Levels of aggregation
 
 The worst thing about Census data files is that they include both
-stand-alone observations and subtotals. That is what the `Level` field
-is intended to capture. I am very open to suggestions for better
-terminology.
+stand-alone observations and subtotals. That is what the
+`Level of Aggregation` field is intended to capture. I am very open to
+suggestions for better terminology.
 
-Using the `Level` field, we can pull stand-alone rows. Notice that none
-of these variables have `NA` in any of their values. That was originally
-my way of detecting stand-alone rows, but I can imagine a situation
-where some factor is simply irrelevant, rather than aggregated, so I
-think it is better to explicitly note each row’s level of aggregation.
+Using the `Level of Aggregation` field, we can pull stand-alone rows.
+Notice that none of these variables have `NA` in any of their values.
+That was originally my way of detecting stand-alone rows, but I can
+imagine a situation where some factor is simply irrelevant, rather than
+aggregated, so I think it is better to explicitly note each row’s level
+of aggregation.
 
-| Variable | Index | Level | One Person | Children | Family | Male Householder | Female Householder |
+| Variable | Index | Level of Aggregation | One Person | Children | Family | Male Householder | Female Householder |
 |:---|---:|---:|:---|:---|:---|:---|:---|
 | PCT2_003N | 3 | 0 | TRUE | FALSE | FALSE | TRUE | FALSE |
 | PCT2_004N | 4 | 0 | TRUE | FALSE | FALSE | FALSE | TRUE |
@@ -253,15 +265,14 @@ think it is better to explicitly note each row’s level of aggregation.
 | PCT2_018N | 18 | 0 | FALSE | FALSE | FALSE | TRUE | FALSE |
 | PCT2_019N | 19 | 0 | FALSE | FALSE | FALSE | FALSE | TRUE |
 
-Variables of PCT2 that are not subtotals or totals. {.table
-style="width:100%;"}
+Variables of PCT2 that are not subtotals or totals. {.table}
 
 We can also pull rows that are aggregations of other rows’ values. Note
 that each of these rows will definitely have some `NA` values. The
 number of `NA`s in a row is proportional, but not exactly equal, to its
 level of aggregation.
 
-| Index | Variable | Level | One Person | Children | Family | Male Householder | Female Householder |
+| Index | Variable | Level of Aggregation | One Person | Children | Family | Male Householder | Female Householder |
 |---:|:---|---:|:---|:---|:---|:---|:---|
 | 1 | PCT2_001N | 5 | NA | NA | NA | NA | NA |
 | 2 | PCT2_002N | 1 | TRUE | FALSE | FALSE | NA | NA |
@@ -273,5 +284,4 @@ level of aggregation.
 | 14 | PCT2_014N | 1 | FALSE | NA | TRUE | FALSE | TRUE |
 | 17 | PCT2_017N | 1 | FALSE | FALSE | FALSE | NA | NA |
 
-Variables of PCT2 that are subtotals or totals. {.table
-style="width:100%;"}
+Variables of PCT2 that are subtotals or totals. {.table}

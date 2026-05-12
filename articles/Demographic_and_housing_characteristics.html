@@ -129,6 +129,8 @@ details.</p>
 <code class="sourceCode R"><span><span class="va">DHC_VARIABLES</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
 <span>        `Columns Present` <span class="op">=</span> <span class="va">.data</span><span class="op">$</span><span class="va">Details</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="va"><a href="https://stringr.tidyverse.org/reference/str_trim.html" class="external-link">str_squish</a></span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="va">.</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nchar</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span>  <span class="op">|&gt;</span></span>
 <span>            <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_int</a></span><span class="op">(</span><span class="va">length</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        .by <span class="op">=</span> <span class="st">"Group"</span></span>
@@ -148,108 +150,143 @@ details.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right">2</td>
-<td align="right">46</td>
-</tr>
-<tr class="even">
+<td align="right">0</td>
 <td align="right">3</td>
-<td align="right">112</td>
-</tr>
-<tr class="odd">
-<td align="right">4</td>
-<td align="right">45</td>
 </tr>
 <tr class="even">
-<td align="right">5</td>
+<td align="right">1</td>
 <td align="right">43</td>
 </tr>
 <tr class="odd">
-<td align="right">6</td>
+<td align="right">2</td>
+<td align="right">112</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">45</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td align="right">43</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
 <td align="right">3</td>
 </tr>
 </tbody>
 </table>
-<p>Most of the groups will need three or fewer columns to capture their
-details, but many will need more. Three different tables will need six
+<p>Most of the groups will need two or fewer columns to capture their
+details, but many will need more. Three different tables will need five
 columns! We’ll use those as examples as we proceed.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">GROUP_DETAILS</span> <span class="op">&lt;-</span> <span class="va">DHC_VARIABLES</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
 <span>        Concept <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/nth.html" class="external-link">first</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Concept</span><span class="op">)</span>,</span>
-<span>        Length <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        Width <span class="op">=</span> <span class="va">.data</span><span class="op">$</span><span class="va">Details</span> <span class="op">|&gt;</span></span>
-<span>            <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_int</a></span><span class="op">(</span><span class="va">length</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>            <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        Variables <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pick.html" class="external-link">pick</a></span><span class="op">(</span><span class="st">"Index"</span>, <span class="st">"Variable"</span>, <span class="st">"Details"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>                Details <span class="op">=</span> <span class="va">.data</span><span class="op">$</span><span class="va">Details</span> <span class="op">|&gt;</span></span>
+<span>                    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="va"><a href="https://stringr.tidyverse.org/reference/str_trim.html" class="external-link">str_squish</a></span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>                    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="va">.</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nchar</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>                    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble_row</a></span><span class="op">(</span><span class="va">.</span>, .name_repair <span class="op">=</span> \<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>                <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="st">"Details"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        .by <span class="op">=</span> <span class="st">"Group"</span></span>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>        Variables <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html" class="external-link">map2</a></span><span class="op">(</span></span>
-<span>            <span class="va">.data</span><span class="op">$</span><span class="va">Group</span>, <span class="va">.data</span><span class="op">$</span><span class="va">Width</span>,</span>
-<span>            \<span class="op">(</span><span class="va">.g</span>, <span class="va">.c</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                <span class="va">.tmp</span> <span class="op">&lt;-</span> <span class="va">DHC_VARIABLES</span> <span class="op">|&gt;</span></span>
-<span>                    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
-<span>                        <span class="va">.data</span><span class="op">$</span><span class="va">Group</span> <span class="op">==</span> <span class="va">.g</span></span>
-<span>                    <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>                    <span class="fu">hercdectables</span><span class="fu">::</span><span class="fu"><a href="../reference/hoist_group_details.html">hoist_group_details</a></span><span class="op">(</span></span>
-<span>                        <span class="st">"Details"</span></span>
-<span>                    <span class="op">)</span></span>
-<span>                <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.tmp</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                    <span class="va">.tmp</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">.tmp</span>,</span>
-<span>                                          <span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span></span>
-<span>                                              \<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span></span>
-<span>                                          <span class="op">)</span><span class="op">)</span></span>
-<span>                <span class="op">}</span></span>
-<span>                <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>                    <span class="va">.tmp</span>,</span>
-<span>                    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">any_of</a></span><span class="op">(</span><span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">.c</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>                                  \<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/coalesce.html" class="external-link">coalesce</a></span><span class="op">(</span><span class="va">.</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span></span>
-<span>                <span class="op">)</span></span>
-<span>            <span class="op">}</span></span>
-<span>        <span class="op">)</span></span>
+<span>        Length <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_int</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Variables</span>, <span class="va">nrow</span><span class="op">)</span>,</span>
+<span>        Width <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_int</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Variables</span>, <span class="va">ncol</span><span class="op">)</span> <span class="op">-</span> <span class="fl">2L</span></span>
 <span>    <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EXAMPLE_GROUPS</span> <span class="op">&lt;-</span> <span class="va">GROUP_DETAILS</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
-<span>        <span class="va">.data</span><span class="op">$</span><span class="va">Width</span> <span class="op">==</span> <span class="fl">6</span></span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">Width</span> <span class="op">==</span> <span class="fl">5</span></span>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
-<span>        <span class="op">!</span><span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">any_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Variables"</span>, <span class="st">"Width"</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="op">!</span><span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">any_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Variables"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span></span>
 <span>    <span class="va">EXAMPLE_GROUPS</span>,</span>
-<span>    caption <span class="op">=</span> <span class="st">"DHC groups that need six columns to capture their details"</span></span>
+<span>    caption <span class="op">=</span> <span class="st">"DHC groups that need five columns to capture their details"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<caption>DHC groups that need six columns to capture their
+<table style="width:100%;" class="table">
+<caption>DHC groups that need five columns to capture their
 details</caption>
 <colgroup>
 <col width="7%">
-<col width="82%">
-<col width="9%">
+<col width="76%">
+<col width="8%">
+<col width="7%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Group</th>
 <th align="left">Concept</th>
 <th align="right">Length</th>
+<th align="right">Width</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left">H14</td>
 <td align="left">TENURE BY HOUSEHOLD TYPE BY AGE OF HOUSEHOLDER</td>
 <td align="right">69</td>
+<td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="left">PCT19</td>
 <td align="left">GROUP QUARTERS POPULATION BY SEX BY AGE BY GROUP
 QUARTERS TYPE</td>
 <td align="right">195</td>
+<td align="right">5</td>
 </tr>
 <tr class="odd">
 <td align="left">PCT2</td>
 <td align="left">HOUSEHOLD SIZE BY HOUSEHOLD TYPE BY PRESENCE OF OWN
 CHILDREN</td>
 <td align="right">19</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">GROUP_DETAILS</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">Width</span> <span class="op">==</span> <span class="fl">0L</span></span>
+<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>        <span class="op">!</span><span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">any_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Variables"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span></span>
+<span>        caption <span class="op">=</span> <span class="st">"DHC groups that need ZERO columns to capture their details"</span></span>
+<span>    <span class="op">)</span></span></code></pre></div>
+<table class="table">
+<caption>DHC groups that need ZERO columns to capture their
+details</caption>
+<thead><tr class="header">
+<th align="left">Group</th>
+<th align="left">Concept</th>
+<th align="right">Length</th>
+<th align="right">Width</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">H1</td>
+<td align="left">HOUSING UNITS</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">H8</td>
+<td align="left">TOTAL POPULATION IN OCCUPIED HOUSING UNITS</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">P1</td>
+<td align="left">TOTAL POPULATION</td>
+<td align="right">1</td>
+<td align="right">0</td>
 </tr>
 </tbody>
 </table>
@@ -257,8 +294,8 @@ CHILDREN</td>
 <div class="section level2">
 <h2 id="an-example-glossary-pct2">An example glossary: PCT2<a class="anchor" aria-label="anchor" href="#an-example-glossary-pct2"></a>
 </h2>
-<p>This is what the details of table PT2 look like after hoisting.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>This is what the details of table PCT2 look like after hoisting.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">PCT2</span> <span class="op">&lt;-</span> <span class="va">GROUP_DETAILS</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
 <span>        <span class="va">.data</span><span class="op">$</span><span class="va">Group</span> <span class="op">==</span> <span class="st">"PCT2"</span></span>
@@ -286,66 +323,66 @@ CHILDREN</td>
 <thead><tr class="header">
 <th align="right">Index</th>
 <th align="left">Variable</th>
+<th align="left">A</th>
 <th align="left">B</th>
 <th align="left">C</th>
 <th align="left">D</th>
 <th align="left">E</th>
-<th align="left">F</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
 <td align="left">PCT2_001N</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="left">PCT2_002N</td>
 <td align="left">1-person household</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
 <td align="left">PCT2_003N</td>
 <td align="left">1-person household</td>
 <td align="left">Male householder</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="left">PCT2_004N</td>
 <td align="left">1-person household</td>
 <td align="left">Female householder</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
 <td align="left">PCT2_005N</td>
 <td align="left">2-or-more-person household</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
 <td align="left">PCT2_006N</td>
 <td align="left">2-or-more-person household</td>
 <td align="left">Family households</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
@@ -353,8 +390,8 @@ CHILDREN</td>
 <td align="left">2-or-more-person household</td>
 <td align="left">Family households</td>
 <td align="left">Married couple family</td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
@@ -363,7 +400,7 @@ CHILDREN</td>
 <td align="left">Family households</td>
 <td align="left">Married couple family</td>
 <td align="left">With own children under 18 years</td>
-<td align="left"></td>
+<td align="left">NA</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
@@ -372,7 +409,7 @@ CHILDREN</td>
 <td align="left">Family households</td>
 <td align="left">Married couple family</td>
 <td align="left">No own children under 18 years</td>
-<td align="left"></td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
@@ -380,8 +417,8 @@ CHILDREN</td>
 <td align="left">2-or-more-person household</td>
 <td align="left">Family households</td>
 <td align="left">Other family</td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="odd">
 <td align="right">11</td>
@@ -390,7 +427,7 @@ CHILDREN</td>
 <td align="left">Family households</td>
 <td align="left">Other family</td>
 <td align="left">Male householder, no spouse present</td>
-<td align="left"></td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="right">12</td>
@@ -417,7 +454,7 @@ CHILDREN</td>
 <td align="left">Family households</td>
 <td align="left">Other family</td>
 <td align="left">Female householder, no spouse present</td>
-<td align="left"></td>
+<td align="left">NA</td>
 </tr>
 <tr class="odd">
 <td align="right">15</td>
@@ -442,9 +479,9 @@ CHILDREN</td>
 <td align="left">PCT2_017N</td>
 <td align="left">2-or-more-person household</td>
 <td align="left">Nonfamily households</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
@@ -452,8 +489,8 @@ CHILDREN</td>
 <td align="left">2-or-more-person household</td>
 <td align="left">Nonfamily households</td>
 <td align="left">Male householder</td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="odd">
 <td align="right">19</td>
@@ -461,8 +498,8 @@ CHILDREN</td>
 <td align="left">2-or-more-person household</td>
 <td align="left">Nonfamily households</td>
 <td align="left">Female householder</td>
-<td align="left"></td>
-<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 </tbody>
 </table>
@@ -473,17 +510,17 @@ try to make meaning of the entire table at once.</p>
 <table class="table">
 <caption>Glossed details from group PCT2</caption>
 <colgroup>
-<col width="8%">
-<col width="8%">
-<col width="14%">
+<col width="6%">
+<col width="23%">
 <col width="12%">
-<col width="9%">
-<col width="22%">
-<col width="25%">
+<col width="10%">
+<col width="7%">
+<col width="18%">
+<col width="21%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">Index</th>
-<th align="right">Level</th>
+<th align="right">Level of Aggregation</th>
 <th align="left">One Person</th>
 <th align="left">Children</th>
 <th align="left">Family</th>
@@ -669,34 +706,34 @@ state for a factor. I’m not sure that this is a good choice. It might be
 better to use an explicit value like ““,”All”, or “*“. It does make
 things consistent across factors and Boolean fields, though.</p>
 <div class="section level3">
-<h3 id="levels-of-summary">Levels of summary<a class="anchor" aria-label="anchor" href="#levels-of-summary"></a>
+<h3 id="levels-of-aggregation">Levels of aggregation<a class="anchor" aria-label="anchor" href="#levels-of-aggregation"></a>
 </h3>
 <p>The worst thing about Census data files is that they include both
 stand-alone observations and subtotals. That is what the
-<code>Level</code> field is intended to capture. I am very open to
-suggestions for better terminology.</p>
-<p>Using the <code>Level</code> field, we can pull stand-alone rows.
-Notice that none of these variables have <code>NA</code> in any of their
-values. That was originally my way of detecting stand-alone rows, but I
-can imagine a situation where some factor is simply irrelevant, rather
-than aggregated, so I think it is better to explicitly note each row’s
-level of aggregation.</p>
-<table style="width:100%;" class="table">
+<code>Level of Aggregation</code> field is intended to capture. I am
+very open to suggestions for better terminology.</p>
+<p>Using the <code>Level of Aggregation</code> field, we can pull
+stand-alone rows. Notice that none of these variables have
+<code>NA</code> in any of their values. That was originally my way of
+detecting stand-alone rows, but I can imagine a situation where some
+factor is simply irrelevant, rather than aggregated, so I think it is
+better to explicitly note each row’s level of aggregation.</p>
+<table class="table">
 <caption>Variables of PCT2 that are not subtotals or totals.</caption>
 <colgroup>
-<col width="11%">
-<col width="7%">
-<col width="7%">
-<col width="12%">
 <col width="10%">
-<col width="8%">
-<col width="20%">
-<col width="22%">
+<col width="6%">
+<col width="21%">
+<col width="11%">
+<col width="9%">
+<col width="7%">
+<col width="17%">
+<col width="19%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Variable</th>
 <th align="right">Index</th>
-<th align="right">Level</th>
+<th align="right">Level of Aggregation</th>
 <th align="left">One Person</th>
 <th align="left">Children</th>
 <th align="left">Family</th>
@@ -810,22 +847,22 @@ level of aggregation.</p>
 Note that each of these rows will definitely have some <code>NA</code>
 values. The number of <code>NA</code>s in a row is proportional, but not
 exactly equal, to its level of aggregation.</p>
-<table style="width:100%;" class="table">
+<table class="table">
 <caption>Variables of PCT2 that are subtotals or totals.</caption>
 <colgroup>
-<col width="7%">
-<col width="11%">
-<col width="7%">
-<col width="12%">
+<col width="6%">
 <col width="10%">
-<col width="8%">
-<col width="20%">
-<col width="22%">
+<col width="21%">
+<col width="11%">
+<col width="9%">
+<col width="7%">
+<col width="17%">
+<col width="19%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">Index</th>
 <th align="left">Variable</th>
-<th align="right">Level</th>
+<th align="right">Level of Aggregation</th>
 <th align="left">One Person</th>
 <th align="left">Children</th>
 <th align="left">Family</th>
