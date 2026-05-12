@@ -8,7 +8,7 @@
 a data frame with seven columns
 \describe{
 \item{Index}{\verb{<int>} the row number of the variable}
-\item{Level}{\verb{<int>} the level of aggregation of the variable}
+\item{Level of Aggregation}{\verb{<int>} the level of aggregation of the variable}
 \item{One Person}{\verb{<lgl>} single-person or multi-person household}
 \item{Children}{\verb{<lgl>} are children present in the household}
 \item{Family}{\verb{<lgl>} are the dwellers a family}

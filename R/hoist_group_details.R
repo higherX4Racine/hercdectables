@@ -13,6 +13,7 @@
 #' @returns `<tbl>` a data frame with extra columns hoisted from `.detail_col`
 #' @export
 hoist_group_details <- function(.glossary, .detail_col = "Details"){
+
     .width <- .glossary[[.detail_col]] |>
         purrr::map_int(length) |>
         max()
@@ -20,5 +21,5 @@ hoist_group_details <- function(.glossary, .detail_col = "Details"){
                                     LETTERS[1:.width])
     tidyr::hoist(.glossary,
                  .col = tidyselect::all_of(.detail_col),
-                 !!!.field_list)
+                 !!!.field_list, )
 }

@@ -19,7 +19,7 @@
 #' @format a data frame with seven columns
 #' \describe{
 #'   \item{Index}{`<int>` the row number of the variable}
-#'   \item{Level}{`<int>` the level of aggregation of the variable}
+#'   \item{Level of Aggregation}{`<int>` the level of aggregation of the variable}
 #'   \item{One Person}{`<lgl>` single-person or multi-person household}
 #'   \item{Children}{`<lgl>` are children present in the household}
 #'   \item{Family}{`<lgl>` are the dwellers a family}

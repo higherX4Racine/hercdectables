@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
     warning = FALSE,
     message = FALSE,
     comment = "#>",
-    cache = TRUE,
+    cache = FALSE,
     dpi = 96,
     fig.dim = c(width = 7, height = 4),
     dev = "png"
@@ -90,6 +90,8 @@ variables' lists of details.
 DHC_VARIABLES |>
     dplyr::summarize(
         `Columns Present` = .data$Details |>
+            purrr::map(stringr::str_squish) |>
+            purrr::map(\(.) .[nchar(.) > 1])  |>
             purrr::map_int(length) |>
             max(),
         .by = "Group"
@@ -103,9 +105,9 @@ DHC_VARIABLES |>
     )
 ```
 
-Most of the groups will need three or fewer columns to capture their details,
+Most of the groups will need two or fewer columns to capture their details,
 but many will need more.
-Three different tables will need six columns!
+Three different tables will need five columns!
 We'll use those as examples as we proceed.
 
 ```{r}
@@ -114,64 +116,58 @@ We'll use those as examples as we proceed.
 GROUP_DETAILS <- DHC_VARIABLES |>
     dplyr::summarize(
         Concept = dplyr::first(.data$Concept),
-        Length = dplyr::n(),
-        Width = .data$Details |>
-            purrr::map_int(length) |>
-            max(),
+        Variables = dplyr::pick("Index", "Variable", "Details") |>
+            dplyr::mutate(
+                Details = .data$Details |>
+                    purrr::map(stringr::str_squish) |>
+                    purrr::map(\(.) .[nchar(.) > 1]) |>
+                    purrr::map(\(.) tibble::as_tibble_row(., .name_repair = \(.) LETTERS[seq_along(.)]))
+                ) |>
+            tidyr::unnest("Details") |>
+            list(),
         .by = "Group"
     ) |>
     dplyr::mutate(
-        Variables = purrr::map2(
-            .data$Group, .data$Width,
-            \(.g, .c) {
-                .tmp <- DHC_VARIABLES |>
-                    dplyr::filter(
-                        .data$Group == .g
-                    ) |>
-                    hercdectables::hoist_group_details(
-                        "Details"
-                    )
-                if (nrow(.tmp) > 1) {
-                    .tmp <- dplyr::select(.tmp,
-                                          tidyselect::where(
-                                              \(.) dplyr::n_distinct(.) > 1
-                                          ))
-                }
-                dplyr::mutate(
-                    .tmp,
-                    dplyr::across(tidyselect::any_of(LETTERS[1:.c]),
-                                  \(.) dplyr::coalesce(., ""))
-                )
-            }
-        )
+        Length = purrr::map_int(.data$Variables, nrow),
+        Width = purrr::map_int(.data$Variables, ncol) - 2L
     )
 ```
 
 ```{r}
 #| label: identify-example-groups
-#| dependson: hoist-group-details
 
 EXAMPLE_GROUPS <- GROUP_DETAILS |>
     dplyr::filter(
-        .data$Width == 6
+        .data$Width == 5
     ) |>
     dplyr::select(
-        !tidyselect::any_of(c("Variables", "Width"))
+        !tidyselect::any_of(c("Variables"))
     )
 
 knitr::kable(
     EXAMPLE_GROUPS,
-    caption = "DHC groups that need six columns to capture their details"
+    caption = "DHC groups that need five columns to capture their details"
 )
+
+GROUP_DETAILS |>
+    dplyr::filter(
+        .data$Width == 0L
+    ) |>
+    dplyr::select(
+        !tidyselect::any_of(c("Variables"))
+    ) |>
+    knitr::kable(
+        caption = "DHC groups that need ZERO columns to capture their details"
+    )
+
 ```
 
 ## An example glossary: PCT2
 
-This is what the details of table PT2 look like after hoisting.
+This is what the details of table PCT2 look like after hoisting.
 
 ```{r}
 #| label: view-raw-pct2
-#| dependson: hoist-group-details
 
 PCT2 <- GROUP_DETAILS |>
     dplyr::filter(
@@ -206,14 +202,14 @@ I'm not sure that this is a good choice.
 It might be better to use an explicit value like "", "All", or "*".
 It does make things consistent across factors and Boolean fields, though.
 
-### Levels of summary
+### Levels of aggregation
 
 The worst thing about Census data files is that they include both stand-alone
 observations and subtotals.
-That is what the `Level` field is intended to capture.
+That is what the `Level of Aggregation` field is intended to capture.
 I am very open to suggestions for better terminology.
 
-Using the `Level` field, we can pull stand-alone rows.
+Using the `Level of Aggregation` field, we can pull stand-alone rows.
 Notice that none of these variables have `NA` in any of their values.
 That was originally my way of detecting stand-alone rows, but I can imagine a
 situation where some factor is simply irrelevant, rather than aggregated,
@@ -234,7 +230,7 @@ DHC_VARIABLES |>
     dplyr::inner_join(
         DHC_PCT2 |>
             dplyr::filter(
-                .data$Level == 0
+                .data$`Level of Aggregation` == 0
             ),
         by = "Index"
     ) |>
@@ -263,7 +259,7 @@ DHC_VARIABLES |>
     dplyr::inner_join(
         DHC_PCT2 |>
             dplyr::filter(
-                .data$Level > 0
+                .data$`Level of Aggregation` > 0
             ),
         by = "Index"
     ) |>
