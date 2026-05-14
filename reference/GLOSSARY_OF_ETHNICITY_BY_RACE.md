@@ -13,18 +13,7 @@ GLOSSARY_OF_ETHNICITY_BY_RACE
 
 ## Format
 
-### GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE
-
-A list of two data tables
-
-- Indices:
-
-  Correspondences between row number and race/ethnicity
-
-- Vintages:
-
-  The specific information needed to pull the data from each decennial
-  census
+An object of class `list` of length 2.
 
 ## Source
 
@@ -55,7 +44,7 @@ columns
 
 ### Vintages
 
-An object of class `tbl_df`/`tbl`/`data.frame` with 3 rows and 4 columns
+An object of class `tbl_df`/`tbl`/`data.frame` with 3 rows and 5 columns
 
 - Vintage:
 
