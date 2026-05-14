@@ -5,14 +5,7 @@
 \alias{GLOSSARY_OF_ETHNICITY_BY_RACE}
 \title{Combinations of racial and Hispanic or non-Hispanic ethnic identities.}
 \format{
-\subsection{GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE}{
-
-A list of two data tables
-\describe{
-\item{Indices}{Correspondences between row number and race/ethnicity}
-\item{Vintages}{The specific information needed to pull the data from each decennial census}
-}
-}
+An object of class \code{list} of length 2.
 }
 \source{
 \url{https://api.census.gov/data/2000/dec/sf1/groups/P008.html}
@@ -45,7 +38,7 @@ with 17 rows and 3 columns
 \subsection{Vintages}{
 
 An object of class \code{tbl_df}/\code{tbl}/\code{data.frame}
-with 3 rows and 4 columns
+with 3 rows and 5 columns
 \describe{
 \item{Vintage}{\verb{<int>} a decennial census year}
 \item{Product}{\verb{<chr>} a short code for building the API URL}

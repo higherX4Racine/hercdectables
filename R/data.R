@@ -116,7 +116,7 @@
 #' ### Vintages
 #'
 #' An object of class `tbl_df`/`tbl`/`data.frame`
-#' with 3 rows and 4 columns
+#' with 3 rows and 5 columns
 #' \describe{
 #'   \item{Vintage}{`<int>` a decennial census year}
 #'   \item{Product}{`<chr>` a short code for building the API URL}
@@ -124,18 +124,10 @@
 #'   \item{Separator}{`<chr>` used for building variable names, either "" or "_"}
 #'   \item{Suffix}{`<chr>` Later vintages have multiple pieces of information per index, distinguished by suffix}
 #' }
-#'
-#' @format ## GLOSSARY_OF_RACE_ETHNICITY_FOR_SINGLE_YEAR_AGE
-#' A list of two data tables
-#' \describe{
-#'   \item{Indices}{Correspondences between row number and race/ethnicity}
-#'   \item{Vintages}{The specific information needed to pull the data from each decennial census}
-#' }
 #' @source <https://api.census.gov/data/2000/dec/sf1/groups/P008.html>
 #' @source <https://api.census.gov/data/2010/dec/sf1/groups/P5.html>
 #' @source <https://api.census.gov/data/2020/dec/dhc/groups/P5.html>
 "GLOSSARY_OF_ETHNICITY_BY_RACE"
-
 
 #' Number of households by owning/renting by Hispanic/not by OMB race
 #'
